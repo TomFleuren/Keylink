@@ -1,0 +1,9 @@
+{
+  "name": "@keylink/sdk-python",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "test": "python3 -m unittest discover -s tests -v",
+    "typecheck": "python3 -m compileall -q keylink tests"
+  }
+}

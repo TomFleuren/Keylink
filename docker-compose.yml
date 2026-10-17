@@ -1,0 +1,49 @@
+services:
+  keylink:
+    build: .
+    ports:
+      - "4780:4780"
+    environment:
+      NODE_ENV: production
+      KEYLINK_HOST: 0.0.0.0
+      KEYLINK_PORT: 4780
+      KEYLINK_PUBLIC_URL: http://localhost:4780
+      KEYLINK_DATA_DIR: /data
+      KEYLINK_MASTER_KEY: ${KEYLINK_MASTER_KEY:-dev-only-change-this-master-key}
+      KEYLINK_ADMIN_PASSWORD: ${KEYLINK_ADMIN_PASSWORD:-change-me}
+      KEYLINK_BOOTSTRAP_APP: Fieldnote
+      KEYLINK_BOOTSTRAP_ORIGINS: http://localhost:4781,http://127.0.0.1:4781
+    volumes:
+      - keylink-data:/data
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:4780/health').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 5s
+
+  demo:
+    build: .
+    command: ["node", "packages/demo/dist/index.js"]
+    ports:
+      - "4781:4781"
+    environment:
+      DEMO_PORT: 4781
+      DEMO_HOST: 0.0.0.0
+      KEYLINK_URL: http://keylink:4780
+      KEYLINK_PUBLIC_URL: http://localhost:4780
+      KEYLINK_API_KEY_FILE: /data/bootstrap-api-key
+    volumes:
+      - keylink-data:/data
+    depends_on:
+      keylink:
+        condition: service_healthy
+
+volumes:
+  keylink-data:
