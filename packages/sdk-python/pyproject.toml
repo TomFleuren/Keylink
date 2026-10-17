@@ -1,0 +1,19 @@
+[project]
+name = "keylink-sdk"
+version = "0.1.0"
+description = "Python server SDK for Keylink two-factor authentication."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+authors = [{ name = "Keylink contributors" }]
+keywords = ["2fa", "totp", "keylink", "authentication"]
+
+[project.urls]
+Homepage = "https://github.com/keylink/keylink"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["keylink*"]
